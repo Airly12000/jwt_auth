@@ -1,5 +1,18 @@
 ###
-GET http://localhost:5000/test
+GET http://localhost:5000/testGen
+Content-Type: application/json
+
+{
+    "username": "airly12000"
+}
+
+###
+GET http://localhost:5000/testVer
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFpcmx5MTIwMDAiLCJpYXQiOjE3MDQxNTYzNzgsImV4cCI6MTcwNDE1NjQzOH0.v2F2gJ4OW4FS5D79xoXiV2F2qYUuMFFn6ZBDBMYV4m4
+
+###
+GET http://localhost:5000/testRef
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFpcmx5MTIwMDAiLCJpYXQiOjE3MDQxNTYzNTV9.58nP_NdUObbRaJbgIlQ8CCMTMMKYNVJdi9b25ldb9XI
 
 ###
 GET http://localhost:5000/users

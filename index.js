@@ -3,6 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const Users = require("./routes/Users");
 const Messages = require("./routes/Messages");
+const { genJWT, verifyJWT, refreshJWT } = require("./auth/Auth");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 
 const app = express();
@@ -13,17 +14,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use(
-  "/test",
-  (req, res, next) => {
-    req.body.name = "halo";
-    next();
-  },
-  (req, res) => {
-    const body = req.body;
-    res.json({ name: body.name });
-  }
-);
+app.use("/testGen", genJWT, (req, res) => {
+  res.json({ token: req.token, refreshToken: req.refreshToken });
+});
+app.use("/testVer", verifyJWT, (req, res) => {
+  res.json({ decoded: req.decoded });
+});
+app.use("/testRef", refreshJWT, (req, res) => {
+  res.json({ token: req.token });
+});
 app.use("/users", Users);
 app.use("/messages", Messages);
 
