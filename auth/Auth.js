@@ -75,4 +75,4 @@ const deleteJWT = (req, res, next) => {
   );
 };
 
-module.exports = { genJWT, verifyJWT, refreshJWT };
+module.exports = { genJWT, verifyJWT, refreshJWT, deleteJWT };
