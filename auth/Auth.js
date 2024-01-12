@@ -4,7 +4,7 @@ const path = require("path");
 const RefreshTokens = require("../models/RefreshTokens");
 require("dotenv").config({ path: path.join(__dirname, "../", ".env") });
 
-let refreshTokens = [];
+const errorHandler = (error) => console.log(`Error: ${error}`);
 
 const genJWT = async (req, res, next) => {
   const username = req.body.username;
@@ -16,7 +16,9 @@ const genJWT = async (req, res, next) => {
     process.env.JWT_REFRESH_TOKEN_SECRET
   );
   // refreshTokens.push(refreshToken);
-  await RefreshTokens.create({ refresh_token: refreshToken });
+  await RefreshTokens.create({ refresh_token: refreshToken }).catch(
+    errorHandler
+  );
   req.token = token;
   req.refreshToken = refreshToken;
   next();
@@ -46,7 +48,7 @@ const refreshJWT = async (req, res, next) => {
 
   const found = await RefreshTokens.findAll({
     where: { refresh_token: refreshToken },
-  });
+  }).catch(errorHandler);
 
   if (found) {
     jwt.verify(
@@ -73,13 +75,16 @@ const refreshJWT = async (req, res, next) => {
   }
 };
 
-const deleteJWT = async (req, res, next) => {
-  await RefreshTokens.delete({
-    where: { refresh_token: req.body.refreshToken },
-  });
-  // refreshTokens = refreshTokens.filter(
-  //   (refreshToken) => refreshToken !== req.body.refreshToken
-  // );
+const deleteJWT = async (req, res) => {
+  const refreshToken = req.body.refreshToken;
+  const del = await RefreshTokens.destroy({
+    where: { refresh_token: refreshToken },
+  }).catch(errorHandler);
+  if (del) {
+    res.json({ message: "token deleted" });
+  } else {
+    res.json({ message: "failed" });
+  }
 };
 
 module.exports = { genJWT, verifyJWT, refreshJWT, deleteJWT };
