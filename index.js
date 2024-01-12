@@ -24,7 +24,7 @@ app.use("/testRef", refreshJWT, (req, res) => {
   res.json({ token: req.token });
 });
 app.use("/users", Users);
-app.use("/messages", Messages);
+app.use("/messages", verifyJWT, Messages);
 
 const PORT = process.env.PORT || 5000;
 
