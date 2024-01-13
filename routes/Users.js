@@ -21,7 +21,6 @@ router.post("/register", genJWT, async (req, res) => {
   }).catch(errorHandler);
   if (newUser) {
     res.json({
-      message: "user created",
       user: {
         token: req.token,
         refreshToken: req.refreshToken,
@@ -38,7 +37,7 @@ router.post("/login", genJWT, async (req, res) => {
   const user = await Users.findAll({
     where: { username: body.username },
   }).catch(errorHandler);
-  if (user) {
+  if (user.length !== 0) {
     const decoded = await bcrypt.compare(body.password, user[0].password);
     if (decoded) {
       res.json({
