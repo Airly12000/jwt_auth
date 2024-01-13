@@ -28,11 +28,11 @@ const verifyJWT = (req, res, next) => {
   const authHeader = req.headers["authorization"]; // Bearer TOKEN
   // const token = req.headers['x-access-token'];
   const token = authHeader && authHeader.split(" ")[1];
-  if (!token) return res.json({ message: "No token" }).status(401);
+  if (!token) return res.status(403).json({ message: "No token" });
 
   jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      res.json({ auth: false, message: "auth failed" }).status(401);
+      res.status(401).json({ auth: false, message: "auth failed" });
     } else {
       req.decoded = decoded;
       next();
@@ -44,7 +44,7 @@ const refreshJWT = async (req, res, next) => {
   const authHeader = req.headers["authorization"]; // Bearer TOKEN
   // const token = req.headers['x-access-token'];
   const refreshToken = authHeader && authHeader.split(" ")[1];
-  if (!refreshToken) return res.json({ message: "No token" }).status(401);
+  if (!refreshToken) return res.status(403).json({ message: "No token" });
 
   const found = await RefreshTokens.findAll({
     where: { refresh_token: refreshToken },
@@ -56,7 +56,7 @@ const refreshJWT = async (req, res, next) => {
       process.env.JWT_REFRESH_TOKEN_SECRET,
       (err, decoded) => {
         if (err) {
-          res.json({ auth: false, message: "auth failed" }).status(403);
+          res.status(403).json({ auth: false, message: "auth failed" });
         } else {
           const { username } = decoded;
           req.token = jwt.sign(
